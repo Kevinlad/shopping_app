@@ -255,7 +255,7 @@ class _OrderShippingState extends State<OrderShipping> {
     Set<Polyline> retLines = {};
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleApiKey:
-          "AIzaSyBUnKLz0R-AsX02Bzv3qIiN6r6xcFhsTQ0", // Google Maps API Key
+          "", // Google Maps API Key
       request: PolylineRequest(
           origin: start, destination: destination, mode: TravelMode.driving),
     );

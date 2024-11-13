@@ -50,7 +50,11 @@ class _NewBrandState extends State<NewBrand> {
                 itemBuilder: (_, index) {
                   return Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                       child: Container(
                         height: 62,

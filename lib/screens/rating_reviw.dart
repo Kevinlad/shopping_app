@@ -157,9 +157,7 @@ class _RatingReviewState extends State<RatingReview> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      SizedBox(
-        height: 20,
-      ),
+      SizedBox(height: 20),
 
       /// Company Review
       Container(
@@ -168,7 +166,9 @@ class _RatingReviewState extends State<RatingReview> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             // color: Theme.of(context).colorScheme.secondary,
-            color: Colors.grey.shade300),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.grey.shade300),
         child: const Padding(
           padding: EdgeInsets.all(16),
           child: Column(

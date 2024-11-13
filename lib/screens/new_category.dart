@@ -224,14 +224,147 @@ class _NewSubCaetgoryState extends State<NewSubCaetgory> {
   }
 }
 
-class ProductHorizontalview extends StatefulWidget {
-  const ProductHorizontalview({super.key});
+// class ProductHorizontalview extends StatefulWidget {
+//   const ProductHorizontalview({super.key});
 
-  @override
-  State<ProductHorizontalview> createState() => _ProductHorizontalviewState();
-}
+//   @override
+//   State<ProductHorizontalview> createState() => _ProductHorizontalviewState();
+// }
 
-class _ProductHorizontalviewState extends State<ProductHorizontalview> {
+// class _ProductHorizontalviewState extends State<ProductHorizontalview> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 350,
+//       padding: const EdgeInsets.all(1),
+//       decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(15), color: Colors.white38),
+//       child: Row(
+//         children: [
+//           Container(
+//             height: 120,
+//             padding: const EdgeInsets.all(2),
+//             child: Stack(
+//               children: [
+//                 // Image
+//                 SizedBox(
+//                   height: 120,
+//                   // padding: const EdgeInsets.all(10),
+//                   child: Stack(children: [
+//                     /// image of product
+//                     Image.asset(
+//                       'assets/images/Item_1_2xx.png',
+//                       fit: BoxFit.contain,
+//                     ),
+
+//                     /// Sale tag
+//                     Positioned(
+//                       top: 12,
+//                       left: 12,
+//                       child: Container(
+//                           height: 25,
+//                           width: 35,
+//                           decoration: BoxDecoration(
+//                             borderRadius: BorderRadius.circular(8),
+//                             color: Colors.amber,
+//                           ),
+//                           child: const Center(
+//                             child: Text(
+//                               "25%",
+//                               style: TextStyle(
+//                                   fontSize: 14, fontWeight: FontWeight.w500),
+//                             ),
+//                           )),
+//                     ),
+
+//                     // Favourite Icon Button
+
+//                     Positioned(
+//                         top: 0,
+//                         right: 0,
+//                         child: IconButton(
+//                             onPressed: () {},
+//                             icon: const Icon(CupertinoIcons.heart_fill,
+//                                 size: 25, color: Colors.red)))
+//                   ]),
+//                 ),
+//               ],
+//             ),
+//           ),
+
+//           ///// Details
+
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Text(
+//                 "Blue Nike Shoes",
+//                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+//               ),
+//               // const SizedBox(
+//               //   height: 6,
+//               // ),
+//               const Row(
+//                 children: [
+//                   Text("Nike",
+//                       style: TextStyle(fontSize: 18, color: Colors.grey)),
+//                   Icon(
+//                     Icons.verified,
+//                     color: Colors.blue,
+//                     size: 16,
+//                   )
+//                 ],
+//               ),
+//               // const SizedBox(
+//               //   height: 6,
+//               // ),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   const Text('\$255.0 - \$355.0',
+//                       maxLines: 1,
+//                       overflow: TextOverflow.ellipsis,
+//                       style:
+//                           TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   Container(
+//                     height: 35,
+//                     width: 35,
+//                     decoration: const BoxDecoration(
+//                         borderRadius: BorderRadius.only(
+//                           topLeft: Radius.circular(10),
+//                           bottomRight: Radius.circular(10),
+//                         ),
+//                         color: Colors.black),
+//                     child: const Icon(Icons.add, color: Colors.white),
+//                   )
+//                 ],
+//               )
+//             ],
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
+class ProductHorizontalview extends StatelessWidget {
+  final String image;
+  final String name;
+  final String brand;
+  final double price;
+  final int quantity;
+
+  const ProductHorizontalview({
+    Key? key,
+    required this.image,
+    required this.name,
+    required this.brand,
+    required this.price,
+    required this.quantity,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -249,15 +382,13 @@ class _ProductHorizontalviewState extends State<ProductHorizontalview> {
                 // Image
                 SizedBox(
                   height: 120,
-                  // padding: const EdgeInsets.all(10),
                   child: Stack(children: [
-                    /// image of product
                     Image.asset(
-                      'assets/images/Item_1_2xx.png',
+                      image,
                       fit: BoxFit.contain,
                     ),
 
-                    /// Sale tag
+                    // Sale tag
                     Positioned(
                       top: 12,
                       left: 12,
@@ -278,57 +409,47 @@ class _ProductHorizontalviewState extends State<ProductHorizontalview> {
                     ),
 
                     // Favourite Icon Button
-
                     Positioned(
                         top: 0,
                         right: 0,
                         child: IconButton(
                             onPressed: () {},
                             icon: const Icon(CupertinoIcons.heart_fill,
-                                size: 25, color: Colors.red)))
+                                size: 25, color: Colors.red))),
                   ]),
                 ),
               ],
             ),
           ),
 
-          ///// Details
-
+          // Details
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Blue Nike Shoes",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+              Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
               ),
-              // const SizedBox(
-              //   height: 6,
-              // ),
-              const Row(
+              Row(
                 children: [
-                  Text("Nike",
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
-                  Icon(
+                  Text(brand,
+                      style: const TextStyle(fontSize: 18, color: Colors.grey)),
+                  const Icon(
                     Icons.verified,
                     color: Colors.blue,
                     size: 16,
-                  )
+                  ),
                 ],
               ),
-              // const SizedBox(
-              //   height: 6,
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('\$255.0 - \$355.0',
+                  Text('\$${price * quantity}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-                  SizedBox(
-                    width: 10,
-                  ),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                  const SizedBox(width: 10),
                   Container(
                     height: 35,
                     width: 35,
@@ -339,11 +460,11 @@ class _ProductHorizontalviewState extends State<ProductHorizontalview> {
                         ),
                         color: Colors.black),
                     child: const Icon(Icons.add, color: Colors.white),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

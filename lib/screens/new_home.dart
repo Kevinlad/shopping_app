@@ -5,11 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:shopping_app/model/CategoryModel.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/provider/google_sign.dart';
+import 'package:shopping_app/screens/animation.dart';
 import 'package:shopping_app/screens/new_allProduct.dart';
 import 'package:shopping_app/screens/new_category.dart';
 import 'package:shopping_app/screens/new_detailsProduct.dart';
+import 'package:shopping_app/screens/order_shipping.dart';
 
 import '../provider/category_provider.dart';
+import '../provider/whishlist_provider.dart';
 
 class NewHome extends StatefulWidget {
   const NewHome({Key? key}) : super(key: key);
@@ -60,18 +63,30 @@ class _NewHomeState extends State<NewHome> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text("Good day for shopping"),
+                                    const Text("Good day for shopping",
+                                        style: TextStyle(color: Colors.black)),
                                     Text(
                                       "${provider.name} ",
                                       style: const TextStyle(
                                           fontSize: 20,
+                                          color: Colors.black,
                                           fontWeight: FontWeight.bold),
-                                    )
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoadingPage()));
+                                        },
+                                        child: Text("ghvgjh"))
                                   ],
                                 ),
                                 Stack(
                                   children: [
-                                    const Icon(Icons.shopping_cart),
+                                    const Icon(Icons.shopping_cart,
+                                        color: Colors.black),
                                     Positioned(
                                       top: 0,
                                       right: 0,
@@ -92,21 +107,21 @@ class _NewHomeState extends State<NewHome> {
                           }
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
+
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: TextField(
                           decoration: InputDecoration(
-                            fillColor: Theme.of(context).colorScheme.secondary,
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            hintText: 'Search in store',
-                          ),
+                              fillColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              hintText: 'Search in store',
+                              hintStyle: TextStyle(color: Colors.black)),
                           onSubmitted: (text) {
                             // Handle search here
                           },
@@ -121,7 +136,9 @@ class _NewHomeState extends State<NewHome> {
                           Text(
                             "Popular Categories",
                             style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -164,7 +181,11 @@ class _NewHomeState extends State<NewHome> {
                                         ),
                                       ),
                                     ),
-                                    Text(categories[index].name),
+                                    Text(
+                                      categories[index].name,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -179,8 +200,8 @@ class _NewHomeState extends State<NewHome> {
                   height: 20,
                 ),
                 Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20))),
@@ -419,6 +440,16 @@ class GridviewProduct extends StatefulWidget {
 }
 
 class _GridviewProductState extends State<GridviewProduct> {
+  late List<bool> _isFavorited;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the list with false, assuming no product is favorited initially
+    _isFavorited = List<bool>.filled(productui.length, false);
+  }
+
+  // bool _isFavorited = false;
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -432,6 +463,7 @@ class _GridviewProductState extends State<GridviewProduct> {
         ),
         itemCount: productui.length,
         itemBuilder: (_, index) {
+          var wishlistProvider = Provider.of<WishlistProvider>(context);
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -493,12 +525,34 @@ class _GridviewProductState extends State<GridviewProduct> {
                         // Favourite Icon Button
 
                         Positioned(
-                            top: 0,
-                            right: 0,
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(CupertinoIcons.heart_fill,
-                                    size: 25, color: Colors.red)))
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                // Check if the item is already in the wishlist
+                                if (wishlistProvider
+                                    .isInWishlist(productui[index])) {
+                                  wishlistProvider
+                                      .removeFromWishlist(productui[index]);
+                                } else {
+                                  wishlistProvider
+                                      .addToWishlist(productui[index]);
+                                }
+                              });
+                            },
+                            icon: Icon(
+                              wishlistProvider.isInWishlist(productui[index])
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              size: 25,
+                              color: wishlistProvider
+                                      .isInWishlist(productui[index])
+                                  ? Colors.red
+                                  : Colors.grey,
+                            ),
+                          ),
+                        ),
                       ]),
                     ),
                     //Details

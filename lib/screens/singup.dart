@@ -26,8 +26,6 @@ class _SignUpState extends State<SignUp> {
           },
           label: Text("Sign In with Google"),
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: Colors.black,
             minimumSize: Size(double.infinity, 50),
           ),
           icon: FaIcon(

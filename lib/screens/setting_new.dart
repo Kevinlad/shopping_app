@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping_app/screens/new_Address.dart';
 import 'package:shopping_app/screens/new_cartScreen.dart';
 import 'package:shopping_app/screens/new_profile.dart';
+import 'package:shopping_app/screens/orders_view.dart';
 
 import '../provider/google_sign.dart';
 
@@ -16,8 +17,19 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<GoogleSignInProvider>(context).user;
-    final email = Provider.of<GoogleSignInProvider>(context).userEmail;
+    final googleSignInProvider = Provider.of<GoogleSignInProvider>(context);
+
+    // Fetch user details from provider
+    final user = googleSignInProvider.user;
+    final email = googleSignInProvider.email;
+    final name = googleSignInProvider.name;
+    final id = googleSignInProvider.id;
+    // If the provider hasn't fetched the data yet, show a loading indicator
+    if (name.isEmpty || email.isEmpty) {
+      // Fetch user data if not fetched yet
+      Future.microtask(() => googleSignInProvider.fetchUserData());
+      return const Center(child: CircularProgressIndicator());
+    }
 
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -43,7 +55,10 @@ class _SettingScreenState extends State<SettingScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
                   "Account",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                      color: Colors.black),
                 ),
               ),
               const SizedBox(
@@ -65,14 +80,19 @@ class _SettingScreenState extends State<SettingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${user?.displayName}',
+                          name.isNotEmpty ? name : 'User',
                           style: const TextStyle(
-                              fontSize: 19, fontWeight: FontWeight.w700),
+                              color: Colors.black,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(
                           height: 3,
                         ),
-                        Text("$email")
+                        Text(
+                          email.isNotEmpty ? email : 'Email not available',
+                          style: const TextStyle(color: Colors.black),
+                        )
                       ],
                     ),
                     const Spacer(),
@@ -84,7 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 builder: (context) =>
                                     const NewProfileScreen()));
                       },
-                      icon: const Icon(Icons.edit),
+                      icon: const Icon(Icons.edit, color: Colors.black),
                     )
                   ],
                 ),
@@ -94,13 +114,12 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               Container(
                   height: height * 1.35,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0),
                     ),
-                    color: Colors
-                        .white, // Change the color according to your preference
+                    color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Column(
@@ -144,8 +163,12 @@ class _SettingScreenState extends State<SettingScreen> {
                           Icons.outbox_rounded,
                           "My Order",
                           "In-progress and Completed Orders",
-                          const Icon(Icons.arrow_forward_ios),
-                          () {}),
+                          const Icon(Icons.arrow_forward_ios), () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OrdersView(userId: id)));
+                      }),
                       menuTitle(
                           Icons.food_bank,
                           "Bank Account",
@@ -222,17 +245,22 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              border: Border.all(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(12)),
-                          child: const Center(
-                              child: Text("Logout",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16))),
+                        child: GestureDetector(
+                          onTap: () {
+                            googleSignInProvider.googleLogout();
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: const Center(
+                                child: Text("Logout",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16))),
+                          ),
                         ),
                       )
                     ],

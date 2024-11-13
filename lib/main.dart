@@ -3,13 +3,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/firebase_options.dart';
-import 'package:shopping_app/practice/profile.dart';
+import 'package:shopping_app/provider/address_provider.dart';
 import 'package:shopping_app/provider/cart_provider.dart';
 import 'package:shopping_app/provider/category_provider.dart';
 import 'package:shopping_app/provider/google_sign.dart';
-import 'package:shopping_app/provider/userData.dart';
+import 'package:shopping_app/provider/order_provider.dart';
+import 'package:shopping_app/provider/payment_provider.dart';
 import 'package:shopping_app/screens/new_bottom_navigation.dart';
+import 'package:shopping_app/screens/phone.dart';
 import 'package:shopping_app/screens/singup.dart';
+
+import 'provider/whishlist_provider.dart';
+import 'screens/verify.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,16 +34,26 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
         ChangeNotifierProvider(create: (context) => CategoryProvider()),
-         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => WishlistProvider()),
+        ChangeNotifierProvider(create: (context) => AddressProvider()),
+        ChangeNotifierProvider(create: (context) => OrderProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        themeMode: ThemeMode.system,
+
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
-        home: NewBottom(),
+        routes: {
+          'phone': (context) => const MyPhone(),
+          'verify': (context) => MyVerify(),
+          // 'home': (context) => HomePage(),
+        },
+        home: HomePage(),
+        // home: const MyPhone(),
       ),
     );
   }
@@ -59,15 +74,15 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Text("Something went wrong");
+            return const Text("Something went wrong");
           } else if (snapshot.hasData) {
             return NewBottom();
           } else {
-            return SignUp();
+            return const SignUp();
           }
         },
       ),

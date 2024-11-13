@@ -49,7 +49,7 @@ class _NewBottomState extends State<NewBottom> {
           Icons.shopping_cart,
           color: _currentIndex == 1 ? Colors.blue : Colors.grey,
         ),
-        label: "Cart",
+        label: "Store",
       ),
       BottomNavigationBarItem(
         icon: Icon(

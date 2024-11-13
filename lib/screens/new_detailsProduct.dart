@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +7,10 @@ import 'package:readmore/readmore.dart';
 import 'package:shopping_app/component/SelectColor.dart';
 import 'package:shopping_app/component/SelectSize.dart';
 
+import '../model/product_model.dart';
 import '../provider/cart_provider.dart';
+import '../provider/google_sign.dart';
+import '../provider/whishlist_provider.dart';
 import 'rating_reviw.dart';
 
 class NewDetailScreen extends StatefulWidget {
@@ -26,6 +31,8 @@ class NewDetailScreen extends StatefulWidget {
 
 class _NewDetailScreenState extends State<NewDetailScreen> {
   int count = 1;
+  bool isInWishlist = false;
+
   bool isVisible = true;
   void increment() {
     setState(() {
@@ -45,16 +52,48 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
   @override
   Widget build(BuildContext context) {
     CartProvider provider = Provider.of<CartProvider>(context);
+    WishlistProvider wishlistProvider =
+        Provider.of<WishlistProvider>(context, listen: true);
+
+    // Creating the product model from widget data
+    Product_Model product = Product_Model(
+        name: widget.name,
+        image: widget.image,
+        price: widget.price,
+        title: widget.name);
+
+    // Check if the product is already in the wishlist
+    bool isInWishlist = wishlistProvider.isInWishlist(product);
+
+    int generateRandomNumber(int min, int max) {
+      final random = Random();
+      return min + random.nextInt(max - min + 1); // Ensures it includes the max
+    }
+
+    int randomNum = generateRandomNumber(1, 100);
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                CupertinoIcons.heart_fill,
-                color: Colors.red,
-              ))
+            onPressed: () {
+              setState(() {
+                if (isInWishlist) {
+                  // If already in wishlist, remove it
+                  wishlistProvider.removeFromWishlist(product);
+                } else {
+                  // Otherwise, add it to the wishlist
+                  wishlistProvider.addToWishlist(product);
+                }
+                // Toggle the heart icon state
+                isInWishlist = !isInWishlist;
+              });
+            },
+            icon: Icon(
+              CupertinoIcons.heart_fill,
+              color: isInWishlist ? Colors.red : Colors.grey,
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -91,7 +130,11 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
                               height: height * 0.08,
                               width: 70,
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
+                                  border: Border.all(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black),
                                   borderRadius: BorderRadius.circular(15)),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
@@ -127,9 +170,9 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
             Container(
               width: 800,
               // width: ,
-              decoration: const BoxDecoration(
-                  color: Colors.white54,
-                  borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   )),
@@ -181,7 +224,7 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
                             width: 15,
                           ),
                           Text("${widget.price}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20))
                         ],
                       ),
@@ -200,9 +243,10 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
                       SizedBox(height: height * 0.01),
                       Row(
                         children: [
-                          Icon(Icons.turn_right_sharp),
-                          Text(widget.title, style: TextStyle(fontSize: 16)),
-                          Icon(
+                          const Icon(Icons.turn_right_sharp),
+                          Text(widget.title,
+                              style: const TextStyle(fontSize: 16)),
+                          const Icon(
                             Icons.verified,
                             color: Colors.blue,
                           )
@@ -213,7 +257,10 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
                         width: 600,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey[400]!),
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.black
+                                    : Colors.grey.shade400),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Column(
@@ -376,18 +423,19 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             "Reviews(199)",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           IconButton(
-                            icon: Icon(Icons.arrow_forward_ios),
+                            icon: const Icon(Icons.arrow_forward_ios),
                             onPressed: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RatingReview()));
+                                      builder: (context) =>
+                                          const RatingReview()));
                             },
                           )
                         ],
@@ -443,11 +491,12 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  provider.addTocart(
-                      image: widget.image,
-                      name: widget.name,
-                      price: widget.price,
-                      quantity: count);
+                  context.read<GoogleSignInProvider>().addToCart(
+                      randomNum.toString(),
+                      widget.name,
+                      count,
+                      widget.price.toDouble(),
+                      widget.image);
                 },
                 child: const Text("Add to Cart"),
                 style: ElevatedButton.styleFrom(
@@ -460,6 +509,11 @@ class _NewDetailScreenState extends State<NewDetailScreen> {
     );
   }
 
+//  provider.addTocart(
+//                       image: widget.image,
+//                       name: widget.name,
+//                       price: widget.price,
+//                       quantity: count);
   Widget roundedImage() {
     return GestureDetector(
       child: Container(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/model/product_model.dart';
 import 'package:shopping_app/screens/new_allBrand.dart';
+import 'package:shopping_app/screens/new_home.dart';
 
 import 'new_detailsProduct.dart';
 
@@ -16,7 +17,7 @@ class _NewStoreState extends State<NewStore> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 1,
+      length: 5,
       child: Scaffold(
         body: NestedScrollView(
             headerSliverBuilder: (_, innerBoxIsScrolled) {
@@ -25,7 +26,10 @@ class _NewStoreState extends State<NewStore> {
                   automaticallyImplyLeading: false,
                   pinned: true,
                   floating: true,
-                  backgroundColor: Colors.white54,
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Colors.white54,
                   expandedHeight: 440,
                   flexibleSpace: Padding(
                     padding: const EdgeInsets.all(20),
@@ -123,7 +127,11 @@ class _NewStoreState extends State<NewStore> {
                             itemBuilder: (_, index) {
                               return Container(
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
+                                      border: Border.all(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black),
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Container(
                                     height: 62,
@@ -157,40 +165,6 @@ class _NewStoreState extends State<NewStore> {
                                     ),
                                   ));
                             }),
-                        // Container(
-                        //     decoration: BoxDecoration(
-                        //         border: Border.all(color: Colors.black),
-                        //         borderRadius: BorderRadius.circular(20)),
-                        //     child: Container(
-                        //       height: 62,
-                        //       width: 36,
-                        //       padding: EdgeInsets.all(15),
-                        //       decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(50)),
-                        //       child: Row(
-                        //         children: [
-                        //           Image(
-                        //               image:
-                        //                   AssetImage('assets/images/icon-1.png')),
-                        //           SizedBox(width: 20),
-                        //           Column(
-                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                        //             children: [
-                        //               Text(
-                        //                 "Nike",
-                        //                 style: TextStyle(
-                        //                     fontWeight: FontWeight.bold,
-                        //                     fontSize: 12),
-                        //               ),
-                        //               Text(
-                        //                 "256 Products",
-                        //                 style: TextStyle(fontSize: 12),
-                        //               )
-                        //             ],
-                        //           )
-                        //         ],
-                        //       ),
-                        //     )),
                       ],
                     ),
                   ),
@@ -198,24 +172,30 @@ class _NewStoreState extends State<NewStore> {
                   bottom: TabBar(
                       isScrollable: true,
                       indicatorColor: Colors.blueGrey[200]!,
-                      labelColor: Colors.grey,
-                      unselectedLabelColor: Colors.black,
+                      labelColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.blue
+                              : Colors.black,
+                      unselectedLabelColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       tabs: const [
                         Tab(
                           child: Text("Sports"),
                         ),
-                        // Tab(
-                        //   child: Text("Furniture"),
-                        // ),
-                        // Tab(
-                        //   child: Text("Electronics"),
-                        // ),
-                        // Tab(
-                        //   child: Text("Clothes"),
-                        // ),
-                        // Tab(
-                        //   child: Text("Cosmetics"),
-                        // )
+                        Tab(
+                          child: Text("Furniture"),
+                        ),
+                        Tab(
+                          child: Text("Electronics"),
+                        ),
+                        Tab(
+                          child: Text("Clothes"),
+                        ),
+                        Tab(
+                          child: Text("Cosmetics"),
+                        )
                       ]),
                 )
               ];
@@ -229,7 +209,11 @@ class _NewStoreState extends State<NewStore> {
                         padding: const EdgeInsets.all(10.0),
                         child: Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
+                                border: Border.all(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black),
                                 borderRadius: BorderRadius.circular(20)),
                             child: Container(
                               height: 210,
@@ -340,166 +324,22 @@ class _NewStoreState extends State<NewStore> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           Text(
-                            "view all",
+                            "View all",
                             style: TextStyle(fontSize: 14, color: Colors.white),
                           )
                         ],
                       ),
-                      GridView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            mainAxisExtent: 301,
-                          ),
-                          itemCount: 4,
-                          itemBuilder: (_, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NewDetailScreen(
-                                              name: productui[index].name,
-                                              image: productui[index].image,
-                                              price: productui[index].price,
-                                              title: productui[index].title,
-                                            )));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Container(
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 2,
-                                          color: Colors.white.withOpacity(0.4),
-                                          offset: const Offset(0, 2))
-                                    ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 180,
-                                        // padding: const EdgeInsets.all(10),
-                                        child: Stack(children: [
-                                          /// image of product
-                                          Image.asset(
-                                            'assets/images/Item_1_2xx.png',
-                                            fit: BoxFit.contain,
-                                          ),
-
-                                          /// Sale tag
-                                          Positioned(
-                                            top: 12,
-                                            left: 12,
-                                            child: Container(
-                                                height: 25,
-                                                width: 35,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: Colors.amber,
-                                                ),
-                                                child: const Center(
-                                                  child: Text(
-                                                    "25%",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                )),
-                                          ),
-
-                                          // Favourite Icon Button
-
-                                          Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              child: IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                      CupertinoIcons.heart_fill,
-                                                      size: 25,
-                                                      color: Colors.red)))
-                                        ]),
-                                      ),
-                                      //Details
-
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "Blue Nike Shoes",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18),
-                                              ),
-                                              const SizedBox(
-                                                height: 6,
-                                              ),
-                                              const Text("Nike",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.grey)),
-                                              const SizedBox(
-                                                height: 6,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text('\$35.54',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 26)),
-                                                  Container(
-                                                    height: 35,
-                                                    width: 35,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              topLeft: Radius
-                                                                  .circular(10),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                            color:
-                                                                Colors.black),
-                                                    child: const Icon(Icons.add,
-                                                        color: Colors.white),
-                                                  )
-                                                ],
-                                              )
-                                            ]),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
+                      GridviewProduct(),
                     ],
                   ),
-                )
+                ),
+                Center(child: Text("Furniture")),
+                // Electronics Tab
+                Center(child: Text("Electronics")),
+                // Clothes Tab
+                Center(child: Text("Clothes")),
+                // Cosmetics Tab
+                Center(child: Text("Cosmetics")),
               ],
             )),
       ),
